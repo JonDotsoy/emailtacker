@@ -16,7 +16,7 @@ const dtimg = (async () => {
 
             res.on('data', chunk => buffers.push(chunk));
 
-            res.on('end', () => {
+            res.on('close', () => {
                 cb(null, {
                     statusCode: res.statusCode,
                     headers: res.headers,
