@@ -42,26 +42,43 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var https_1 = __importDefault(require("https"));
 var util_1 = __importDefault(require("util"));
 var dtimg = (function () { return __awaiter(void 0, void 0, void 0, function () {
-    var r;
+    var res;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, util_1.default.promisify(function (cb) {
                     https_1.default.request('https://via.placeholder.com/1', {
                         method: 'GET',
-                    }, cb);
+                    }, function (res) {
+                        var buffers = [];
+                        res.on('data', function (chunk) { return buffers.push(chunk); });
+                        res.on('end', function () {
+                            cb(null, {
+                                statusCode: res.statusCode,
+                                headers: res.headers,
+                                body: Buffer.concat(buffers),
+                            });
+                        });
+                    });
                 })()];
             case 1:
-                r = _a.sent();
-                return [2 /*return*/];
+                res = _a.sent();
+                return [2 /*return*/, res];
         }
     });
 }); })();
 exports.handler = function (event, context) { return __awaiter(void 0, void 0, void 0, function () {
+    var img;
     return __generator(this, function (_a) {
-        console.log(event, context);
-        return [2 /*return*/, {
-                statusCode: 200,
-                body: "We are now split testing!"
-            }];
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, dtimg];
+            case 1:
+                img = _a.sent();
+                console.log(event, context);
+                return [2 /*return*/, {
+                        statusCode: 200,
+                        headers: img.headers,
+                        body: img.body,
+                    }];
+        }
     });
 }); };

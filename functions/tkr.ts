@@ -36,6 +36,7 @@ exports.handler = async (event: APIGatewayEvent, context: Context) => {
     return {
         statusCode: 200,
         headers: img.headers,
-        body: img.body,
+        body: img.body.toString('base64'),
+        isBase64Encoded: true,
     };
 }
